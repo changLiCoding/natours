@@ -5,7 +5,7 @@ const express = require('express');
 //   getUser,
 //   updateUser,
 //   deleteUser,
-// } = require('./../controllers/userController.js}');
+// } = require(`${__dirname}/../controllers/userController.js`);
 const userController = require(`${__dirname}/../controllers/userController.js`);
 
 const router = express.Router();

@@ -18,7 +18,7 @@ app.use((req, res, next) => {
 });
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
-  req.somethingRandom = 'whatever';
+  req.randomMessage = 'whatever';
   next();
 });
 
