@@ -2,8 +2,8 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 
-const tourRouter = require('./routes/tourRoutes.js');
-const userRouter = require('./routes/userRoutes.js');
+const tourRouter = require(`${__dirname}/routes/tourRoutes.js`);
+const userRouter = require(`${__dirname}/routes/userRoutes.js`);
 
 // 1. MIDDLEWARE
 // middleware return a function added in the middleware stack
@@ -37,7 +37,9 @@ app.use('/api/v1/users', userRouter);
 // app.get('/api/vi/tours/:id', getTour);
 
 // 4. START SERVER
-const port = 3000;
-app.listen(port, function () {
-  console.log(`App running on port ${port}...`);
-});
+
+module.exports = app;
+// const port = 3000;
+// app.listen(port, function () {
+//   console.log(`App running on port ${port}...`);
+// });
