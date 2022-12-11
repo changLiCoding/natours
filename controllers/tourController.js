@@ -1,5 +1,4 @@
 const fs = require('fs');
-const app = require('../app');
 
 // parse json file of tours information
 const tours = JSON.parse(
@@ -18,8 +17,8 @@ exports.checkID = (req, res, next, value) => {
 };
 
 exports.checkBody = (req, res, next) => {
-  const name = req.body.name;
-  const price = req.body.price;
+  const { name } = req.body;
+  const { price } = req.body;
   console.log('checkbody middleware');
   if (!name || !price) {
     res.status(404).json({ status: 'fall', message: 'Invalid name or price' });
@@ -73,6 +72,7 @@ exports.createTour = (req, res) => {
     { createdAt: req.requestTime },
     { randomMessage: req.randomMessage }
   );
+
   tours.push(newTour);
   fs.writeFile(
     `${__dirname}/dev-data/data/tours-simple.json`,
