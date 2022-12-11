@@ -7,11 +7,16 @@ const userRouter = require(`${__dirname}/routes/userRoutes.js`);
 
 // 1. MIDDLEWARE
 // middleware return a function added in the middleware stack
-// morgan return information like: GET /api/v1/tours 200 3.562 ms - 8920
-app.use(morgan('dev'));
 
+//Only run the logger middleware if in development mode
+if (process.env.NODE_ENV === 'development') {
+  // morgan return information like: GET /api/v1/tours 200 3.562 ms - 8920
+  app.use(morgan('dev'));
+}
+
+// bodyParser for json response
 app.use(express.json());
-
+app.use(express.static(`${__dirname}/public`));
 app.use((req, res, next) => {
   console.log('Hello from the middleware🌝');
   next();

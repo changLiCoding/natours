@@ -1,8 +1,14 @@
 const fs = require('fs');
 const app = require('../app');
 
+// parse json file of tours information
+const tours = JSON.parse(
+  fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`, 'utf8')
+);
+
+// Middleware
 exports.checkID = (req, res, next, value) => {
-  console.log(`Tour id is: ${value}`);
+  console.log(`Tour id is: ${value} from checkID middleware`);
   const id = req.params.id * 1;
   const tour = tours.find((ele) => ele.id === id);
   if (!tour) {
@@ -11,11 +17,17 @@ exports.checkID = (req, res, next, value) => {
   next();
 };
 
-// parse json file of tours information
-const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`, 'utf8')
-);
-// TOURS
+exports.checkBody = (req, res, next) => {
+  const name = req.body.name;
+  const price = req.body.price;
+  console.log('checkbody middleware');
+  if (!name || !price) {
+    res.status(404).json({ status: 'fall', message: 'Invalid name or price' });
+  }
+  next();
+};
+
+// TOURS Routes Handlers
 exports.getAllTours = (req, res) => {
   res.status(200).json({
     status: 'success',
