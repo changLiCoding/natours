@@ -48,13 +48,15 @@ exports.getAllTours = async (req, res) => {
     let query = Tour.find(JSON.parse(queryString));
     // 2). Sorting
     if (req.query.sort) {
-      query = query.sort(req.query.sort);
+      const sortBy = req.query.sort.split(',').join(' ');
+      query = query.sort(sortBy);
+    } else {
+      query = query.sort('-createdAt');
     }
     // {difficulty: 'easy', duration: {$lt: 15}}
 
     // 2. EXECUTE QUERY
     const tours = await query;
-    console.log(tours);
 
     // const query = Tour.find()
     //   .where('duration')
@@ -123,7 +125,10 @@ exports.updateTour = async (req, res) => {
       new: true,
       runValidators: true,
     });
-    res.status(200).json({ status: 'success', data: { tour: tour } });
+    res.status(200).json({
+      status: 'success',
+      data: { tour: tour, updatedAt: req.requestAt },
+    });
   } catch (err) {
     res.status(404).json({ status: 'failure', message: err.message });
   }
