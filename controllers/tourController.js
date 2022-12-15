@@ -1,3 +1,5 @@
+const { request } = require('../app');
+
 // Tour model
 const Tour = require(`${__dirname}/../models/tourModel.js`);
 
@@ -35,15 +37,17 @@ exports.getAllTours = async (req, res) => {
     // query object for tour key and value
     const queryObject = { ...req.query };
     // delete query fields like page sort
-    const excludedFields = ['page', 'sort', 'limit', 'feilds'];
+    const excludedFields = ['page', 'sort', 'limit', 'fields'];
     excludedFields.forEach((field) => delete queryObject[field]);
 
     // 1B). Advanced Filtering
     let queryString = JSON.stringify(queryObject);
+    // console.log(queryString);
     queryString = queryString.replace(
       /\b(gte|gt|lte|lt)\b/g,
       (match) => `$${match}`
     );
+    // console.log(queryString);
 
     let query = Tour.find(JSON.parse(queryString));
     // 2). Sorting
@@ -53,11 +57,19 @@ exports.getAllTours = async (req, res) => {
     } else {
       query = query.sort('-createdAt');
     }
+    // 3) Fields
+    if (req.query.fields) {
+      const fields = req.query.fields.split(',').join(' ');
+      query = query.select(fields);
+      console.log(fields);
+    } else {
+      query = query.select('-__v');
+    }
+
     // {difficulty: 'easy', duration: {$lt: 15}}
 
     // 2. EXECUTE QUERY
     const tours = await query;
-
     // const query = Tour.find()
     //   .where('duration')
     //   .lte(5)
