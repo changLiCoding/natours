@@ -10,6 +10,14 @@ const router = express.Router();
 // Add it to the post handler stack
 
 router
+  .route('/top-5-best')
+  .get(tourController.aliasTopBest, tourController.getAllTours);
+
+router
+  .route('/top-5-cheap')
+  .get(tourController.aliasTopCheap, tourController.getAllTours);
+
+router
   .route('/')
   .get(tourController.getAllTours)
   .post(tourController.createTour);
