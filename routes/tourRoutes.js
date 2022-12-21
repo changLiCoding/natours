@@ -9,6 +9,10 @@ const router = express.Router();
 // if not, send back 400 (bad request)
 // Add it to the post handler stack
 
+router.route('/tour-stats').get(tourController.getTourStats);
+
+router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);
+
 router
   .route('/top-5-best')
   .get(tourController.aliasTopBest, tourController.getAllTours);

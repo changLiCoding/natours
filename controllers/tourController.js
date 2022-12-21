@@ -139,19 +139,83 @@ exports.deleteTour = async (req, res) => {
 
 exports.getTourStats = async (req, res) => {
   try {
-    const stats = Tour.aggregate([
+    const stats = await Tour.aggregate([
       { $match: { ratingsAverage: { $gte: 4.5 } } },
       {
         $group: {
-          _id: null,
+          // $toUpper, $sum, $avg, $min, $max operators from mongodb
+          _id: { $toUpper: '$difficulty' },
+          numTours: { $sum: 1 },
+          numRatings: { $sum: '$ratingsQuantity' },
           avgRating: { $avg: '$ratingsAverage' },
           avgPrice: { $avg: '$price' },
           minPrice: { $min: '$price' },
           maxPrice: { $max: '$price' },
         },
       },
+      {
+        $sort: { avgPrice: 1 },
+      },
+      // $ne not equal to 'EASY'
+      // ignore all data with "EASY"
+      {
+        $match: { _id: { $ne: 'EASY' } },
+      },
     ]);
+    res.status(200).json({
+      status: 'sucess',
+      requestAt: req.requestTime,
+      requestTest: req.randomMessage,
+      data: { tour: stats },
+    });
   } catch (err) {
     res.status(404).json({ status: 'failure', message: err.message });
+  }
+};
+
+exports.getMonthlyPlan = async (req, res) => {
+  try {
+    const year = req.params.year * 1;
+    const plan = await Tour.aggregate([
+      {
+        $unwind: '$startDates',
+      },
+      {
+        $match: {
+          startDates: {
+            $gte: new Date(`${year}-01-01`),
+            $lte: new Date(`${year}-12-31`),
+          },
+        },
+      },
+      // Separate documents into groups according to group key
+      {
+        $group: {
+          _id: { $month: '$startDates' },
+          numTourStarts: { $sum: 1 },
+          tours: { $push: '$name' },
+        },
+      },
+      // Add field of month equal to current number of _id
+      { $addFields: { month: '$_id' } },
+      // Remove _id by put project of field with 0 value
+      {
+        $project: {
+          _id: 0,
+        },
+      },
+      // Sort data for certain key, 1 for bigger value -1 for decrease value
+      { $sort: { numTourStarts: -1 } },
+      { $limit: 12 },
+    ]);
+    // const newPlan = plan.map(
+    //   (ele) => JSON.stringify(ele.startDates).split('-')[1]
+    // );
+    // console.log(newPlan);
+    res
+      .status(200)
+      .json({ status: 'success', results: plan.length, data: { plan: plan } });
+  } catch (error) {
+    res.status(404).json({ status: 'failure', message: error.message });
   }
 };
