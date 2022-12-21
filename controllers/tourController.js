@@ -158,9 +158,9 @@ exports.getTourStats = async (req, res) => {
       },
       // $ne not equal to 'EASY'
       // ignore all data with "EASY"
-      {
-        $match: { _id: { $ne: 'EASY' } },
-      },
+      // {
+      //   $match: { _id: { $ne: 'EASY' } },
+      // },
     ]);
     res.status(200).json({
       status: 'sucess',
