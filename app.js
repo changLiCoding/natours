@@ -14,7 +14,7 @@ const userRouter = require(`${__dirname}/routes/userRoutes.js`);
 // middleware return a function added in the middleware stack
 
 //Only run the logger middleware if in development mode
-if (process.env.NODE_ENV === 'DEVELOPMENT') {
+if (process.env.NODE_ENV === 'development') {
   // morgan return information like: GET /api/v1/tours 200 3.562 ms - 8920
   app.use(morgan('dev'));
 }

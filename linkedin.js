@@ -257,4 +257,16 @@
 // }
 // new logThis();
 
-console.log(0 && hi);
+// console.log(0 && hi);
+
+const catchAsync = (fn) => (req, res, next) => {
+  fn(req, res, next).catch(next);
+};
+
+exports.createTour = catchAsync(async (req, res) => {
+  const newTour = await Tour.create(req.body);
+  res.status(201).json({
+    status: 'success',
+    data: { tour: newTour },
+  } );
+

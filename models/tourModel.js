@@ -7,7 +7,7 @@ const tourSchema = new mongoose.Schema(
     name: {
       type: String,
       trim: true,
-      reqired: [true, 'A tour must have a price'],
+      required: [true, 'A tour must have a name'],
       unique: true,
       maxlength: [40, 'The tour must less or equal than 40 caractors'],
       minlength: [4, 'The tour must less or equal than 4 caractors'],
@@ -41,7 +41,7 @@ const tourSchema = new mongoose.Schema(
       max: [5, 'Rating must be below 5.0.'],
     },
     ratingsQuantity: { type: Number, default: 0 },
-    price: { type: Number, reqired: [true, 'A tour must have a price'] },
+    price: { type: Number, required: [true, 'A tour must have a price'] },
     priceDiscount: {
       type: Number,
       validate: {
