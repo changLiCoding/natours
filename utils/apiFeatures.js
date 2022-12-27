@@ -32,6 +32,7 @@ class APIFeatures {
 
   limitFields() {
     if (this.queryString.fields) {
+      // introduce bug
       const fields = this.queryString.fields.split(',').join(' ');
       this.query = this.query.select(fields);
     } else {
