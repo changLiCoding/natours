@@ -259,14 +259,75 @@
 
 // console.log(0 && hi);
 
-const catchAsync = (fn) => (req, res, next) => {
-  fn(req, res, next).catch(next);
-};
+// const catchAsync = (fn) => (req, res, next) => {
+//   fn(req, res, next).catch(next);
+// };
 
-exports.createTour = catchAsync(async (req, res) => {
-  const newTour = await Tour.create(req.body);
-  res.status(201).json({
-    status: 'success',
-    data: { tour: newTour },
-  } );
+// exports.createTour = catchAsync(async (req, res) => {
+//   const newTour = await Tour.create(req.body);
+//   res.status(201).json({
+//     status: 'success',
+//     data: { tour: newTour },
+//   } );
 
+CastError: Cast to ObjectId failed for value "wwwwww" (type string) at path "_id" for model "Tour"
+    at model.Query.exec (/Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/mongoose/lib/query.js:4498:21)
+    at Query.then (/Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/mongoose/lib/query.js:4592:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  messageFormat: undefined,
+  stringValue: '"wwwwww"',
+  kind: 'ObjectId',
+  value: 'wwwwww',
+  path: '_id',
+  reason: Error: Argument passed in must be a single String of 12 bytes or a string of 24 hex characters
+      at new ObjectID (/Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/bson/lib/bson/objectid.js:59:11)
+      at castObjectId (/Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/mongoose/lib/cast/objectid.js:25:12)
+      at ObjectId.cast (/Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/mongoose/lib/schema/objectid.js:246:12)
+      at SchemaType.applySetters (/Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/mongoose/lib/schematype.js:1123:12)
+      at SchemaType._castForQuery (/Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/mongoose/lib/schematype.js:1601:15)
+      at SchemaType.castForQuery (/Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/mongoose/lib/schematype.js:1591:15)
+      at SchemaType.castForQueryWrapper (/Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/mongoose/lib/schematype.js:1568:20)
+      at cast (/Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/mongoose/lib/cast.js:332:32)
+      at Query.cast (/Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/mongoose/lib/query.js:4937:12)
+      at Query._castConditions (/Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/mongoose/lib/query.js:1975:10)
+      at model.Query.<anonymous> (/Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/mongoose/lib/query.js:2232:8)
+      at model.Query._wrappedThunk [as _findOne] (/Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/mongoose/lib/helpers/query/wrapThunk.js:16:8)
+      at /Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/kareem/index.js:279:20
+      at _next (/Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/kareem/index.js:103:16)
+      at /Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/kareem/index.js:508:38
+      at process.processTicksAndRejections (node:internal/process/task_queues:77:11),
+  valueType: 'string',
+  statusCode: 500,
+  status: 'error'
+}
+
+CastError: Cast to ObjectId failed for value "wwwwww" (type string) at path "_id" for model "Tour"
+    at model.Query.exec (/Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/mongoose/lib/query.js:4498:21)
+    at Query.then (/Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/mongoose/lib/query.js:4592:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  messageFormat: undefined,
+  stringValue: '"wwwwww"',
+  kind: 'ObjectId',
+  value: 'wwwwww',
+  path: '_id',
+  reason: Error: Argument passed in must be a single String of 12 bytes or a string of 24 hex characters
+      at new ObjectID (/Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/bson/lib/bson/objectid.js:59:11)
+      at castObjectId (/Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/mongoose/lib/cast/objectid.js:25:12)
+      at ObjectId.cast (/Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/mongoose/lib/schema/objectid.js:246:12)
+      at SchemaType.applySetters (/Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/mongoose/lib/schematype.js:1123:12)
+      at SchemaType._castForQuery (/Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/mongoose/lib/schematype.js:1601:15)
+      at SchemaType.castForQuery (/Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/mongoose/lib/schematype.js:1591:15)
+      at SchemaType.castForQueryWrapper (/Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/mongoose/lib/schematype.js:1568:20)
+      at cast (/Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/mongoose/lib/cast.js:332:32)
+      at Query.cast (/Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/mongoose/lib/query.js:4937:12)
+      at Query._castConditions (/Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/mongoose/lib/query.js:1975:10)
+      at model.Query.<anonymous> (/Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/mongoose/lib/query.js:2232:8)
+      at model.Query._wrappedThunk [as _findOne] (/Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/mongoose/lib/helpers/query/wrapThunk.js:16:8)
+      at /Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/kareem/index.js:279:20
+      at _next (/Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/kareem/index.js:103:16)
+      at /Users/changli/Desktop/NodeJs/4-natours/starter/node_modules/kareem/index.js:508:38
+      at process.processTicksAndRejections (node:internal/process/task_queues:77:11),
+  valueType: 'string',
+  statusCode: 500,
+  status: 'error'
+}

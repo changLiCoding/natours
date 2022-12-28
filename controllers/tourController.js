@@ -118,6 +118,7 @@ exports.createTour = catchAsync(async (req, res, next) => {
 });
 
 exports.updateTour = catchAsync(async (req, res, next) => {
+  console.log('wrong tour');
   const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,

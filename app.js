@@ -42,7 +42,8 @@ app.use('/api/v1/users', userRouter);
 app.all('*', (req, res, next) => {
   next(
     new AppError(
-      `Can't find ${req.originalUrl} on this server! Please try again. `
+      `Can't find ${req.originalUrl} on this server! Please try again. `,
+      404
     )
   );
 });
