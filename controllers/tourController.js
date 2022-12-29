@@ -66,8 +66,8 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
     requestTest: req.randomMessage,
     results: tours.length,
     data: {
-      tours: tours,
-    },
+      tours: tours
+    }
   });
   // try {
   // } catch (err) {
@@ -89,7 +89,7 @@ exports.getTour = catchAsync(async (req, res, next) => {
     status: 'sucess',
     requestAt: req.requestTime,
     requestTest: req.randomMessage,
-    data: { tour: tour },
+    data: { tour: tour }
   });
   // try {
   // } catch (err) {
@@ -105,7 +105,7 @@ exports.createTour = catchAsync(async (req, res, next) => {
   const newTour = await Tour.create(req.body);
   res.status(201).json({
     status: 'success',
-    data: { tour: newTour },
+    data: { tour: newTour }
   });
   // try {
   // } catch (err) {
@@ -121,14 +121,14 @@ exports.updateTour = catchAsync(async (req, res, next) => {
   console.log('wrong tour');
   const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
-    runValidators: true,
+    runValidators: true
   });
   if (!tour) {
     return next(new AppError('No tour found with that id', 404));
   }
   res.status(200).json({
     status: 'success',
-    data: { tour: tour, updatedAt: req.requestAt },
+    data: { tour: tour, updatedAt: req.requestAt }
   });
   // try {
   // } catch (err) {
@@ -162,12 +162,12 @@ exports.getTourStats = catchAsync(async (req, res, next) => {
         avgRating: { $avg: '$ratingsAverage' },
         avgPrice: { $avg: '$price' },
         minPrice: { $min: '$price' },
-        maxPrice: { $max: '$price' },
-      },
+        maxPrice: { $max: '$price' }
+      }
     },
     {
-      $sort: { avgPrice: 1 },
-    },
+      $sort: { avgPrice: 1 }
+    }
     // $ne not equal to 'EASY'
     // ignore all data with "EASY"
     // {
@@ -178,7 +178,7 @@ exports.getTourStats = catchAsync(async (req, res, next) => {
     status: 'sucess',
     requestAt: req.requestTime,
     requestTest: req.randomMessage,
-    data: { tour: stats },
+    data: { tour: stats }
   });
   // try {
   // } catch (err) {
@@ -190,35 +190,35 @@ exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
   const year = req.params.year * 1;
   const plan = await Tour.aggregate([
     {
-      $unwind: '$startDates',
+      $unwind: '$startDates'
     },
     {
       $match: {
         startDates: {
           $gte: new Date(`${year}-01-01`),
-          $lte: new Date(`${year}-12-31`),
-        },
-      },
+          $lte: new Date(`${year}-12-31`)
+        }
+      }
     },
     // Separate documents into groups according to group key
     {
       $group: {
         _id: { $month: '$startDates' },
         numTourStarts: { $sum: 1 },
-        tours: { $push: '$name' },
-      },
+        tours: { $push: '$name' }
+      }
     },
     // Add field of month equal to current number of _id
     { $addFields: { month: '$_id' } },
     // Remove _id by put project of field with 0 value
     {
       $project: {
-        _id: 0,
-      },
+        _id: 0
+      }
     },
     // Sort data for certain key, 1 for bigger value -1 for decrease value
     { $sort: { numTourStarts: -1 } },
-    { $limit: 12 },
+    { $limit: 12 }
   ]);
   // const newPlan = plan.map(
   //   (ele) => JSON.stringify(ele.startDates).split('-')[1]
