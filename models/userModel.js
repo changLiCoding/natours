@@ -11,8 +11,8 @@ const userSchema = new mongoose.Schema(
       required: [true, 'A user needs to have a username. '],
       unique: true,
       trim: true,
-      maxlength: [15, 'The tour must less or equal than 40 caractors'],
-      minlength: [4, 'The tour must less or equal than 4 caractors']
+      maxlength: [40, 'The user must less or equal than 40 caractors'],
+      minlength: [4, 'The user must less or equal than 4 caractors']
     },
     email: {
       type: String,
@@ -20,8 +20,8 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       unique: true,
       trim: true,
-      maxlength: [20, 'The tour must less or equal than 40 caractors'],
-      minlength: [4, 'The tour must less or equal than 4 caractors'],
+      maxlength: [40, 'The email must less or equal than 40 caractors'],
+      minlength: [4, 'The email must less or equal than 4 caractors'],
       validate: [validator.isEmail, 'Please enter a valid email address!'],
       match: [
         /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
