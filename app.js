@@ -1,6 +1,8 @@
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean');
 
 const app = express();
 
@@ -15,7 +17,11 @@ const userRouter = require(`${__dirname}/routes/userRoutes.js`);
 // 1. GLOBAL MIDDLEWARE
 // middleware return a function added in the middleware stack
 
+// Set security HTTP headers
+// Helmet global middleware
+app.use(helmet());
 //Only run the logger middleware if in development mode
+// Development log middleware
 if (process.env.NODE_ENV === 'development') {
   // morgan return information like: GET /api/v1/tours 200 3.562 ms - 8920
   app.use(morgan('dev'));
@@ -27,11 +33,17 @@ const limiter = rateLimit({
   message: 'Too many requests from this IP. Please try again in an hour. '
 });
 app.use('/api', limiter);
-// Helmet global middleware
-
 // bodyParser for json response
-app.use(express.json());
+// Body Parser, reading data from body into req.body
+app.use(express.json({ limit: '10kb' }));
+
+// Data sanitization against NoSQL query injection
+app.use(mongoSanitize());
+// Data sanitization against XSS
+app.use(xss());
+// Serving static files
 app.use(express.static(`${__dirname}/public`));
+// Testing customized middleware
 app.use((req, res, next) => {
   console.log('Hello from the middleware🌝');
   next();
