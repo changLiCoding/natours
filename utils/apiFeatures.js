@@ -10,11 +10,11 @@ class APIFeatures {
     const queryObject = { ...this.queryString };
     // delete query fields like page sort
     const excludedFields = ['page', 'sort', 'limit', 'fields'];
-    excludedFields.forEach((field) => delete queryObject[field]);
+    excludedFields.forEach(field => delete queryObject[field]);
 
     // 1B). Advanced Filtering
     let queryStr = JSON.stringify(queryObject);
-    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
     this.query = this.query.find(JSON.parse(queryStr));
     // let tours = Tour.find( JSON.parse( queryStr ) );
     return this;
