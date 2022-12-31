@@ -76,6 +76,12 @@ userSchema.pre('save', async function(next) {
   next();
 });
 
+userSchema.pre('save', async function(next) {
+  if (!this.isModified('password') || this.isNew) return next();
+  this.passwordChangedAt = Date.now() - 4000;
+  next();
+});
+
 userSchema.virtual('ifPicUpload').get(function() {
   return 'photo' in this;
 });

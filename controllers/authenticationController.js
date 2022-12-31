@@ -13,6 +13,16 @@ const signToken = id => {
     expiresIn: process.env.JWT_EXPIRES_IN
   });
 };
+const createSendToken = (user, statusCode, res) => {
+  const token = signToken(user._id);
+  res.status(statusCode).json({
+    status: 'success',
+    token: token,
+    data: {
+      user
+    }
+  });
+};
 
 exports.signup = catchAsync(async (req, res, next) => {
   const newUser = await User.create({
@@ -23,20 +33,11 @@ exports.signup = catchAsync(async (req, res, next) => {
     passwordChangedAt: req.body.passwordChangedAt,
     role: req.body.role
   });
-  const token = signToken(newUser._id);
-
-  res.status(201).json({
-    status: 'success',
-    createdAt: req.requestTime,
-    token: token,
-    data: {
-      user: newUser
-    }
-  });
+  createSendToken(newUser, 201, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
-  const { name, password, email } = req.body;
+  const { password, email } = req.body;
   // 1). Check if email and password are existed
   if (!email || !password) {
     return next(new AppError('Please provide email and passord!', 400));
@@ -47,11 +48,7 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Please provide correct email and password', 401));
   }
   // 3). if everything is ok, send token to client
-  const token = signToken(user._id);
-  res.status(200).json({
-    status: 'success',
-    token: token
-  });
+  createSendToken(user, 200, res);
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
@@ -171,12 +168,45 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   user.passwordResetToken = undefined;
   user.passwordResetExpires = undefined;
   // 3). Update changePasswordAt property of the user
-  user.passwordChangedAt = Date.now();
+  // user.passwordChangedAt = Date.now();
   await user.save();
   // 4). Log the user in, send JWT token
-  const token = signToken(user._id);
-  res.status(200).json({
-    status: 'success',
-    token: token
-  });
+  createSendToken(user, 200, res);
+});
+
+exports.updatePassword = catchAsync(async function(req, res, next) {
+  // 1). Get user from the collection
+  // let token;
+  // if (
+  //   req.headers.authorization &&
+  //   req.headers.authorization.startsWith('Bearer ')
+  // ) {
+  //   token = await req.headers.authorization.split(' ')[1];
+  // }
+  // if (!token)
+  //   return next(
+  //     new AppError('You do not have permission to update this password!', 404)
+  //   );
+  // const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  // console.log(decoded.id);
+  // const user = await User.findById(decoded.id).select('+password');
+  const user = await User.findById(req.user.id).select('+password');
+  // 2). check if POSTED current password is correct
+  if (
+    !user ||
+    !(await user.correctPassword(req.body.currentPassword, user.password))
+  ) {
+    return next(
+      new AppError(
+        'Can not get accessed with the user or there is something wrong with the password. ',
+        401
+      )
+    );
+  }
+  // 3). If so, update password
+  user.password = req.body.newPassword;
+  user.passwordConfirm = req.body.passwordConfirm;
+  await user.save();
+  // 4). Log user in, send JWT token
+  createSendToken(user, 200, res);
 });

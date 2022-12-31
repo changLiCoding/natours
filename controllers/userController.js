@@ -2,6 +2,7 @@ const catchAsync = require(`${__dirname}/../utils/catchAsync.js`);
 const User = require(`${__dirname}/../models/userModel.js`);
 
 // USERS
+exports.updateMe = catchAsync(async function(req, res, next) {});
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   const users = await User.find();
   res.status(200).json({
