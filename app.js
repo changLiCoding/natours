@@ -1,4 +1,6 @@
 const express = require('express');
+const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
 
 const app = express();
 
@@ -10,7 +12,7 @@ const globalErrorHandler = require('./controllers/errorController');
 const tourRouter = require(`${__dirname}/routes/tourRoutes.js`);
 const userRouter = require(`${__dirname}/routes/userRoutes.js`);
 
-// 1. MIDDLEWARE
+// 1. GLOBAL MIDDLEWARE
 // middleware return a function added in the middleware stack
 
 //Only run the logger middleware if in development mode
@@ -18,6 +20,14 @@ if (process.env.NODE_ENV === 'development') {
   // morgan return information like: GET /api/v1/tours 200 3.562 ms - 8920
   app.use(morgan('dev'));
 }
+// Express rate limits: reduce DOS attack and brute force
+const limiter = rateLimit({
+  max: 100,
+  windowMs: 60 * 60 * 1000,
+  message: 'Too many requests from this IP. Please try again in an hour. '
+});
+app.use('/api', limiter);
+// Helmet global middleware
 
 // bodyParser for json response
 app.use(express.json());

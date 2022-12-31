@@ -43,6 +43,20 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.reactivateMe = catchAsync(async (req, res, next) => {
+  const user = await User.findOne({ email: 'somethingelse@gmail.com' });
+  console.log(user);
+  if (!user) {
+    return next(new AppError('There is no user with email address.', 404));
+  }
+  user.active = true;
+  user.save();
+  res.status(200).json({
+    status: 'success',
+    user: user
+  });
+});
+
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   const users = await User.find();
   res.status(200).json({
