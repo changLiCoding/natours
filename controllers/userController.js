@@ -1,6 +1,7 @@
-const catchAsync = require(`${__dirname}/../utils/catchAsync.js`);
-const User = require(`${__dirname}/../models/userModel.js`);
+const catchAsync = require('../utils/catchAsync.js');
+const User = require('../models/userModel.js');
 const AppError = require('./../utils/appError');
+const factory = require('./handlerFactory');
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -84,21 +85,6 @@ exports.getUser = (req, res, next) => {
     .status(500)
     .json({ status: 'error', message: 'The route is not definded yet!' });
 };
-exports.updateUser = (req, res, next) => {
-  const id = req.params.id * 1;
-  // if (id > tours.length - 1) {
-  //   return res.status(404).json({ status: 'fall', message: 'Invalid ID' });
-  // }
-  res
-    .status(500)
-    .json({ status: 'error', message: 'The route is not definded yet!' });
-};
-exports.deleteUser = (req, res, next) => {
-  const id = req.params.id * 1;
-  // if (id > tours.length - 1) {
-  //   return res.status(404).json({ status: 'fall', message: 'Invalid ID' });
-  // }
-  res
-    .status(500)
-    .json({ status: 'error', message: 'The route is not definded yet!' });
-};
+// Do not update password with this route
+exports.updateUser = factory.updateOne(User);
+exports.deleteUser = factory.deleteOne(User);

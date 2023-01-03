@@ -1,7 +1,9 @@
 const express = require('express');
 
-const tourController = require(`${__dirname}/../controllers/tourController.js`);
-const authController = require(`${__dirname}/../controllers/authenticationController.js`);
+const tourController = require('../controllers/tourController.js');
+const authController = require('../controllers/authenticationController.js');
+const reviewRouter = require('../routes/reviewRoutes');
+// const reviewController = require(`${__dirname}/../controllers/reviewController.js`);
 
 const router = express.Router();
 // router.param('id', tourController.checkID);
@@ -9,6 +11,19 @@ const router = express.Router();
 // Check if the body contains the name and price property
 // if not, send back 400 (bad request)
 // Add it to the post handler stack
+
+// POST /tourS/12312312ASDFAS/reviews
+// GET /tourS/12312312ASDFAS/reviews
+// GET /tourS/12312312ASDFAS/reviews/asdfnasqj3j0sdfasj
+
+// router
+//   .route('/:tourId/reviews')
+//   .post(
+//     authController.protect,
+//     authController.restrictTo('user'),
+//     reviewController.createReview
+//   );
+router.use('/:tourId/reviews', reviewRouter);
 
 router.route('/tour-stats').get(tourController.getTourStats);
 
