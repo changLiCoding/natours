@@ -14,6 +14,7 @@ const globalErrorHandler = require('./controllers/errorController');
 
 const tourRouter = require(`${__dirname}/routes/tourRoutes.js`);
 const userRouter = require(`${__dirname}/routes/userRoutes.js`);
+const reviewRouter = require(`${__dirname}/routes/reviewRoutes.js`);
 
 // 1. GLOBAL MIDDLEWARE
 // middleware return a function added in the middleware stack
@@ -72,8 +73,10 @@ app.use((req, res, next) => {
 // 3. ROUTES
 
 // Mounting the routers
+
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/reviews', reviewRouter);
 app.all('*', (req, res, next) => {
   next(
     new AppError(

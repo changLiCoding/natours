@@ -80,6 +80,8 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
 });
 
 exports.getTour = catchAsync(async (req, res, next) => {
+  // embedded guides in tours, only available for query not the actual database
+  // Only available for getTour route not for other queries
   const tour = await Tour.findById(req.params.id);
   // const tour = await Tour.findOne({_id: req.params.id})
   if (!tour) {

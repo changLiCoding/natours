@@ -44,6 +44,7 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
 });
 
 exports.reactivateMe = catchAsync(async (req, res, next) => {
+  // Can not find any query due to mongodb document middleware block all find queries
   const user = await User.findOne({ email: 'somethingelse@gmail.com' });
   console.log(user);
   if (!user) {

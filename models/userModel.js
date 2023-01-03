@@ -86,7 +86,7 @@ userSchema.pre('save', async function(next) {
   this.passwordChangedAt = Date.now() - 4000;
   next();
 });
-
+// Query middleware
 userSchema.pre(/^find/, function(next) {
   // this points to the current query
   this.find({ active: { $ne: false } });
@@ -94,7 +94,7 @@ userSchema.pre(/^find/, function(next) {
 });
 
 userSchema.virtual('ifPicUpload').get(function() {
-  return 'photo' in this;
+  return Boolean(this.photo);
 });
 
 userSchema.methods.correctPassword = async function(

@@ -74,7 +74,8 @@ const tourSchema = new mongoose.Schema(
     slug: { type: String },
     secretTour: {
       type: Boolean,
-      default: false
+      default: false,
+      select: false
     },
     startLocation: {
       // GeoJSON
@@ -100,7 +101,7 @@ const tourSchema = new mongoose.Schema(
         day: Number
       }
     ],
-    guides: Array
+    guides: [{ type: mongoose.Schema.ObjectId, ref: 'User' }]
   },
   { toJSON: { virtuals: true } },
   { toObject: { virtuals: true } }
@@ -110,16 +111,18 @@ tourSchema.virtual('durationWeeks').get(function() {
   return this.duration / 7;
 });
 // Document middleware: run before the .save() and .create()
-// not run .insertMany() and .insertOne()
+// not run .insertMany() and .insertOne() or update
 tourSchema.pre('save', function(next) {
   this.slug = slugify(this.name, { lower: true });
   next();
 });
-tourSchema.pre('save', async function(next) {
-  const guidesPromise = this.guides.map(async id => await User.findById(id));
-  this.guides = await Promise.all(guidesPromise);
-  next();
-});
+
+// Embedded middleware: run after the .save() and .create() for user data in tour data
+// tourSchema.pre('save', async function(next) {
+//   const guidesPromise = this.guides.map(async id => await User.findById(id));
+//   this.guides = await Promise.all(guidesPromise);
+//   next();
+// });
 
 // tourSchema.pre('save', (next) => {
 //   console.log('Will Save Document');
@@ -130,11 +133,18 @@ tourSchema.pre('save', async function(next) {
 //   next();
 // });
 
-// Query MiddleWare
+// Query MiddleWare (this) keyword always point to the current query object
 // Filter out secretTour
 tourSchema.pre(/^find/, function(next) {
   this.find({ secretTour: { $ne: true } });
   this.start = Date.now();
+  next();
+});
+tourSchema.pre(/^find/, function(next) {
+  this.populate({
+    path: 'guides',
+    select: '-__v -passwordChangedAt -passwordResetExpires -passwordResetToken'
+  });
   next();
 });
 tourSchema.post(/^find/, function(docs, next) {
