@@ -6,8 +6,8 @@ const express = require('express');
 //   updateUser,
 //   deleteUser,
 // } = require(`${__dirname}/../controllers/userController.js`);
-const userController = require(`${__dirname}/../controllers/userController.js`);
-const authController = require(`${__dirname}/../controllers/authenticationController.js`);
+const userController = require('../controllers/userController.js');
+const authController = require('../controllers/authenticationController.js');
 
 const router = express.Router();
 
@@ -24,10 +24,8 @@ router.patch('/updateMe', authController.protect, userController.updateMe);
 router.delete('/deleteMe', authController.protect, userController.deleteMe);
 router.patch('/reactivateMe', userController.reactivateMe);
 
-router
-  .route('/')
-  .get(userController.getAllUsers)
-  .post(userController.createUser);
+router.route('/').get(userController.getAllUsers);
+// .post(userController.createUser);
 router
   .route('/:id')
   .get(userController.getUser)

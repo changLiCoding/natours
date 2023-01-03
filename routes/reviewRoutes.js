@@ -2,7 +2,7 @@ const express = require('express');
 
 const reviewController = require('../controllers/reviewController');
 
-const authController = require(`${__dirname}/../controllers/authenticationController.js`);
+const authController = require('../controllers/authenticationController.js');
 
 const router = express.Router({
   mergeParams: true
@@ -14,10 +14,12 @@ router
   .post(
     authController.protect,
     authController.restrictTo('user'),
+    reviewController.setTourUserIds,
     reviewController.createReview
   );
 router
   .route('/:id')
+  .get(reviewController.getReview)
   .delete(authController.protect, reviewController.deleteReview)
   .patch(authController.protect, reviewController.updateReview);
 

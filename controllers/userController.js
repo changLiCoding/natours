@@ -59,32 +59,26 @@ exports.reactivateMe = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getAllUsers = catchAsync(async (req, res, next) => {
-  const users = await User.find();
-  res.status(200).json({
-    status: 'success',
-    requestAt: req.requestTime,
-    result: users.length,
-    data: {
-      users: users
-    }
-  });
-});
+exports.getAllUsers = factory.getAll(User);
+//   catchAsync( async ( req, res, next ) => {
+//   const users = await User.find();
+//   res.status(200).json({
+//     status: 'success',
+//     requestAt: req.requestTime,
+//     result: users.length,
+//     data: {
+//       users: users
+//     }
+//   });
+// });
 
 exports.createUser = (req, res, next) => {
-  const id = req.params.id * 1;
-  // if (id > newUser.length - 1) {
-  //   return res.status(404).json({ status: 'fall', message: 'Invalid ID' });
-  // }
-  res
-    .status(500)
-    .json({ status: 'error', message: 'The route is not definded yet!' });
+  res.status(500).json({
+    status: 'error',
+    message: 'This route is not defined! Please use signup instead.'
+  });
 };
-exports.getUser = (req, res, next) => {
-  res
-    .status(500)
-    .json({ status: 'error', message: 'The route is not definded yet!' });
-};
+exports.getUser = factory.getOne(User);
 // Do not update password with this route
 exports.updateUser = factory.updateOne(User);
 exports.deleteUser = factory.deleteOne(User);

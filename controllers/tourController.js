@@ -1,12 +1,9 @@
-// APIFeatures module
-const APIFeatures = require(`${__dirname}/../utils/apiFeatures.js`);
 // Tour model
-const Tour = require(`${__dirname}/../models/tourModel.js`);
+const Tour = require('../models/tourModel.js');
 
 // catch errors Asynchronously function
-const catchAsync = require(`${__dirname}/../utils/catchAsync.js`);
+const catchAsync = require('../utils/catchAsync.js');
 
-const AppError = require(`${__dirname}/../utils/appError.js`);
 const factory = require('./handlerFactory');
 //  //  parse json file of tours information
 // const tours = JSON.parse(
@@ -51,74 +48,65 @@ exports.aliasTopCheap = async (req, res, next) => {
 // };
 
 // TOURS Routes Handlers
-exports.getAllTours = catchAsync(async (req, res, next) => {
-  // 2. EXECUTE QUERY
-  const features = new APIFeatures(Tour.find(), req.query)
-    .filter()
-    .sort()
-    .limitFields()
-    .paginate();
-  const tours = await features.query;
+exports.getAllTours = factory.getAll(Tour);
+//   catchAsync( async ( req, res, next ) => {
+//   // 2. EXECUTE QUERY
+//   const features = new APIFeatures(Tour.find(), req.query)
+//     .filter()
+//     .sort()
+//     .limitFields()
+//     .paginate();
+//   const tours = await features.query;
 
-  // 3. SEND RESPONSE
-  res.status(200).json({
-    status: 'success',
-    requestAt: req.requestTime,
-    requestTest: req.randomMessage,
-    results: tours.length,
-    data: {
-      tours: tours
-    }
-  });
-  // try {
-  // } catch (err) {
-  //   console.log(err);
-  //   res.status(404).json({
-  //     status: 'error',
-  //     message: err,
-  //   });
-  // }
-});
+//   // 3. SEND RESPONSE
+//   res.status(200).json({
+//     status: 'success',
+//     requestAt: req.requestTime,
+//     requestTest: req.randomMessage,
+//     results: tours.length,
+//     data: {
+//       tours: tours
+//     }
+//   });
+//   // try {
+//   // } catch (err) {
+//   //   console.log(err);
+//   //   res.status(404).json({
+//   //     status: 'error',
+//   //     message: err,
+//   //   });
+//   // }
+// });
 
-exports.getTour = catchAsync(async (req, res, next) => {
-  // embedded guides in tours, only available for query not the actual database
-  // Only available for getTour route not for other queries
-  const tour = await Tour.findById(req.params.id).populate('reviews');
-  // const tour = await Tour.findOne({_id: req.params.id})
-  if (!tour) {
-    return next(new AppError('No tour found with that id', 404));
-  }
-  res.status(200).json({
-    status: 'sucess',
-    requestAt: req.requestTime,
-    requestTest: req.randomMessage,
-    data: { tour: tour }
-  });
-  // try {
-  // } catch (err) {
-  //   console.log(err);
-  //   res.status(404).json({
-  //     status: 'error',
-  //     message: err,
-  //   });
-  // }
+exports.getTour = factory.getOne(Tour, {
+  path: 'reviews',
+  select: 'rating review'
 });
+//   catchAsync( async ( req, res, next ) => {
+//   // embedded guides in tours, only available for query not the actual database
+//   // Only available for getTour route not for other queries
+//   const tour = await Tour.findById(req.params.id).populate('reviews');
+//   // const tour = await Tour.findOne({_id: req.params.id})
+//   if (!tour) {
+//     return next(new AppError('No tour found with that id', 404));
+//   }
+//   res.status(200).json({
+//     status: 'sucess',
+//     requestAt: req.requestTime,
+//     requestTest: req.randomMessage,
+//     data: { tour: tour }
+//   });
+//   // try {
+//   // } catch (err) {
+//   //   console.log(err);
+//   //   res.status(404).json({
+//   //     status: 'error',
+//   //     message: err,
+//   //   });
+//   // }
+// });
 
-exports.createTour = catchAsync(async (req, res, next) => {
-  const newTour = await Tour.create(req.body);
-  res.status(201).json({
-    status: 'success',
-    data: { tour: newTour }
-  });
-  // try {
-  // } catch (err) {
-  //   console.log(err.message);
-  //   res.status(400).json({
-  //     status: 'failure',
-  //     message: err,
-  //   });
-  // }
-});
+exports.createTour = factory.createOne(Tour);
 
 exports.updateTour = factory.updateOne(Tour);
 
