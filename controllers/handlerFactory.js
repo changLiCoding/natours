@@ -5,7 +5,7 @@ const APIFeatures = require('../utils/apiFeatures.js');
 
 exports.deleteOne = Model =>
   catchAsync(async (req, res, next) => {
-    console.log(req.params.id);
+    // console.log(req.params.id);
     // let doc = await Model.findById(req.params.id);
     const doc = await Model.findByIdAndDelete(req.params.id);
     if (!doc) {

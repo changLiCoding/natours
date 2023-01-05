@@ -39,7 +39,8 @@ const tourSchema = new mongoose.Schema(
       type: Number,
       default: 4.5,
       min: [1, 'Rating must be above 1.0.'],
-      max: [5, 'Rating must be below 5.0.']
+      max: [5, 'Rating must be below 5.0.'],
+      set: val => Math.round(val * 100) / 100
     },
     ratingsQuantity: { type: Number, default: 0 },
     price: { type: Number, required: [true, 'A tour must have a price'] },
@@ -108,6 +109,8 @@ const tourSchema = new mongoose.Schema(
 );
 
 // tourSchema.index({ price: 1 });
+// price: 1 -> sorting increasing price
+// ratingsAverage: -1 -> sorting decreasing rating
 tourSchema.index({ price: 1, ratingsAverage: -1 });
 tourSchema.index({ slug: 1 });
 

@@ -8,7 +8,7 @@ process.on('uncaughtException', err => {
 });
 
 dotenv.config({ path: './config.env' });
-const app = require(`${__dirname}/app.js`);
+const app = require('./app.js');
 
 const DB = process.env.DATABASE.replace(
   '<PASSWORD>',
