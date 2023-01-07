@@ -27,7 +27,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Set security HTTP headers
 // Helmet global middleware
-app.use(helmet());
+app.use(
+  helmet({ contentSecurityPolicy: false, crossOriginEmbedderPolicy: false })
+);
 //Only run the logger middleware if in development mode
 // Development log middleware
 if (process.env.NODE_ENV === 'development') {
