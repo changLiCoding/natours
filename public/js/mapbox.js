@@ -9,8 +9,10 @@ mapboxgl.accessToken =
 var map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/lichang004/clclili1n000014qtrnk6heqc',
-  center: [-118.113491, 34.111745],
-  zoom: 10
+  scrollZoom: false
+  // interactive: false
+  // center: [-118.113491, 34.111745],
+  // zoom: 10
 });
 const bounds = new mapboxgl.LngLatBounds();
 
@@ -25,6 +27,13 @@ locations.forEach(location => {
   })
     .setLngLat(location.coordinates)
     .addTo(map);
+  // Add popup
+  new mapboxgl.Popup({
+    offset: 30
+  })
+    .setLngLat(location.coordinates)
+    .setHTML(`<p>Day ${location.day}: ${location.description}</p>`)
+    .addTo(map);
   // Extend map bounds to include current location
   bounds.extend(location.coordinates);
 });
@@ -32,7 +41,7 @@ locations.forEach(location => {
 map.fitBounds(bounds, {
   padding: {
     top: 200,
-    bottom: 200,
+    bottom: 150,
     left: 100,
     right: 100
   }
