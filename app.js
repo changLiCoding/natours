@@ -5,6 +5,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const path = require('path');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
@@ -46,6 +47,7 @@ app.use('/api', limiter);
 // bodyParser for json response
 // Body Parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
+app.use(cookieParser());
 
 // Data sanitization against NoSQL query injection
 app.use(mongoSanitize());
@@ -65,8 +67,13 @@ app.use(
 );
 
 // Testing customized middleware
+app.use(function(req, res, next) {
+  res.locals.whatever = 'something';
+  next();
+});
 app.use((req, res, next) => {
   console.log('Hello from the middleware🌝');
+  // console.log(req.cookies);
   next();
 });
 app.use((req, res, next) => {
