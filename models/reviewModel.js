@@ -79,10 +79,10 @@ reviewSchema.statics.calcAverageRatings = async function(tourId) {
   }
 };
 reviewSchema.post('save', function(next) {
-  console.log('before construction');
+  // console.log('before construction');
   // this point to current review
   this.constructor.calcAverageRatings(this.tour);
-  console.log('after construction');
+  // console.log('after construction');
 });
 
 reviewSchema.pre(/^findOneAnd/, async function(next) {
